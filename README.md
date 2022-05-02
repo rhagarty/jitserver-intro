@@ -17,7 +17,6 @@ In this article we will cover JIT compiler basics, how the JITServer can make a 
 1. [How JITServer can lower costs](#5-how-jitserver-can-lower-costs)
 1. [Best use cases for implementing JITServer](#6-best-use-cases-for-implementing-jitserver)
 1. [Where to get the JITServer](#7-where-to-get-the-jitserver)
-1. [A working example](#8-a-working-example)
 
 ## 1. First came the JIT compiler
 
@@ -218,12 +217,3 @@ The OpenJ9 JVM is open-source and free to download. Due to licensing issues, the
 ### Any competing technologies?
 
 Currently, no other leading JVM vendors offer the JITServer provided by OpenJ9. But Azul does have a competing product that provides similar functionality - the product name is [Cloud Native Compiler](https://docs.azul.com/cloud_native_compiler/) (CNC). Note that the product is proprietary and requires a non-disclosure license to use.
-
-## 8. A working example
-
-When the JVM is launched, it needs to specify the address of the JITServer.
-
-Deploy app with and without JITServer on AWS w/ OpenShift
-Show docker files and screenshots of important setup steps
-Are there metrics to show throughput?
-Create a video for this
