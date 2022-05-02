@@ -113,13 +113,15 @@ Using a JITServer in a container environment provides multiple benefits:
 * Better cluster CPU utilization (including JITServer) when AOT server side caching is used. ???
 * JITServer ramp-up advantage increases in CPU constrained environments.
 
-### Where does AOT (Ahead-Of-Time compilation) fit in?
+### Where does AOT fit in?
 
-OpenJ9 has AOT capability. During first-time execution, all the methods are compiled and stored in the AOT shared class cache. Any additional JVMs that connect to the same shared class cache can take advantage of this AOT code.
+You may be wondering if the JITServer is compatible with another OpenJ9 feature - the Ahead-Of-Time (AOT) compiler.
 
-With containers, AOT is not as useful. Shared class cache is embedded in the container, so when containers are destroyed, so is the shared class cache. Because of its potential short life-cycle, AOT is not a big advantage of in a container environment. Conversely, the JITServer has a long life-cycle and can continue to provide benefits.
+The theory behind AOT is that during first-time execution, all the methods are compiled and stored in the AOT shared class cache. Any additional JVMs that connect to the same shared class cache can take advantage of this AOT code.
 
-EXPLAIN BETTER - AOT is in what container - same as JVM? If JITServer is restarted, same problem as AOT? Why is JITServer life-cycle longer?
+With containers, AOT is not as useful. The shared class cache is embedded in the container, so when containers are destroyed, so is the shared class cache. Because of its potential short life-cycle, AOT is not a big advantage in a container environment. Conversely, the JITServer has a long life-cycle and can continue to provide benefits.
+
+But, both features can be used together. In this case the AOT can help an application start and ramp-up faster. Once running, methods will still be sent to the JITServer, which is better able to optimize the code due to profile information derived from the running JVM. In general, JITServer compiled code is 10% more efficient than AOT compiled code.
 
 ## 4. JITServer vs vanilla JIT Compiler - how they stack up
 
