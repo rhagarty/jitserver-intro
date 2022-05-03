@@ -6,7 +6,7 @@
 
 Similar to other vendors offerings, Semeru Runtimes is built on the latest open source release of the OpenJDK class libraries provided by AdoptOpenJDK.
 
-What separates Semeru Runtimes from the others is that it includes the highly acclaimed OpenJ9 JVM.
+What separates Semeru Runtimes from the others is that it includes the highly rated OpenJ9 JVM.
 
 Another differentiator is the supported platforms. Besides the standard x86 and ARM architectures, it also supports AIX and Linux on IBM POWER, and Linux on IBM Z systems.
 
