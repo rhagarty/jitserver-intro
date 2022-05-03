@@ -20,9 +20,10 @@ In this article we will cover JIT compiler basics, how the JITServer can make a 
 
 ## 1. First came the JIT compiler
 
-JIT compilers were first introduced to run Java executable code faster, making it more competitive with natively compiled platform-specific languages.
+JIT compilers were first introduced to run Java code faster, making it more competitive with natively compiled platform-specific languages.
 
-The theory behind the JIT compiler is to convert Java bytecode to machine code as the bytecode is interpreted line by line. Improvement gains are realized when the "pre-compiled" Java code is executed again.
+The theory behind the JIT compiler is to convert Java bytecode to machine code as the bytecode is interpreted line by line. Improvement gains are realized when the natively compiled version of that Java code is executed again.
+
 
 The JIT compiler is a part of the Java Virtual Machine (JVM). Shown below is the workflow from Java code to execution on the host machine:
 
@@ -37,7 +38,7 @@ Run Time - execute the bytecode on the host machine:
 
 * **_java abc_** - loads the class file byte code into the class loader of the JVM.
 * The bytecode verifier ensures the security of the bytecode.
-* One line at a time, the interpreter converts the bytecode into machine code and transfers it to the OS for execution.
+* One line at a time, the interpreter converts the bytecode into machine code and executes it.
 * The JIT compiler can improve execution performance by 10x over the interpreter. Based on profiling metrics, the JIT compiler will supply machine code of recurring bytecodes to the interpreter for execution.
 
 ## 2. JIT compilation - the good and the bad
@@ -54,15 +55,15 @@ Unfortunately, the performance gains do not come without a cost, especially in a
 * Can create memory spikes and/or OOM crashes.
 * Spikes and crashes lower QoS.
 * Added complexity of container provisioning due to factoring in worst-case scenarios.
-* if JIT crashes, it takes down the whole JVM.
+* If JIT crashes, it takes down the whole JVM.
 
 Here we show an example of how JIT compilation spikes effect CPU consumption and memory usage.
 
 ![jit-compiler-issues](doc/source/images/jit-compiler-issues.png)
 
-While this application may only use <400MB of memory, the JIT compiler can create large spikes. To avoid out of memory (OOM) crashes, the container will need to be sized to accommodate these occasional spikes. Additional experimental tests may need to be performed to determine how high the spikes can be.
+While this application may only use ~360MB of memory at steady state, the JIT compiler can create large footprint spikes. To avoid out of memory (OOM) induced crashes, the container will need to be sized to accommodate these occasional spikes. Additional experimental tests may need to be performed to determine how high the spikes can be.
 
-Remember that in a container environment, OOM crashes will result in the container being killed and re-started.
+Remember that in a container environment, native OOM events will result in the container being killed.
 
 ## 3. JITServer to the rescue
 
@@ -80,16 +81,16 @@ This diagram shows a high-level view of the process flow between the JVM and the
 
 ![jvm-flow](doc/source/images/jvm-flow.png)
 
-(Need to mention that compilation occurs at the method level?)
+Note that in OpenJ9 the compilation occurs at the method level.
 
 1. The bytecode is passed into the JVM.
 2. The JVM checks if the method code is already stored in its local code cache.
 3. If the JVM already has the compiled method code, the code is executed.
 4. If the method needs to be compiled and no JITServer is running, the JVM JIT compiler is invoked. The compiled method code is then stored locally and then executed.
-5. If a JITServer is running, the method is passed to the JITServer where it will check if the code is already stored in its local code cache.
+5. If a JITServer is running, the method is passed to the JITServer where it will check if the code is already stored in its local code cache (this check is only performed if server side caching is enabled).
 6. If the JITServer does not have it stored locally, it will compile the method, store it in its local code cache, and then return the code back to the JVM.
 7. If the JITServer does have the method stored locally, it simply returns it to the JVM.
-8. When the JVM receives the method code from the JITServer. The method code is then stored locally and then executed.
+8. The JVM receives the method code from the JITServer. The method code is then stored locally and then executed.
 
 >**NOTE**:
 >
@@ -102,22 +103,21 @@ This diagram shows a high-level view of the process flow between the JVM and the
 
 Using a JITServer in a container environment provides multiple benefits:
 
-* JIT compilation resources can be scaled independently.
+* JIT compilation resources can be scaled independently from the Java aplication resources.
 * Application containers can use smaller memory limits to minimize costs.
-* Overall cluster memory savings (JITServer included) because memory consumption peaks from different applications don’t align. ???
+* Overall cluster memory utilization (JITServer included) is reduced, because memory consumption peaks from different applications don’t align.
 * Provisioning is simpler - user only needs to care about application requirements.
-* Ramp-up is faster especially in constrained environments.
-* Performance of short-lived applications is better. (WHY)
-* Performance is more predictable - less memory spikes in the JVM.
-* Autoscaling behavior is better. (NEED MORE)
-* Better cluster CPU utilization (including JITServer) when AOT server side caching is used. ???
-* JITServer ramp-up advantage increases in CPU constrained environments.
+* Ramp-up is faster, especially in constrained environments.
+* Performance of short-lived applications is better.
+* Performance is more predictable because CPU spikes caused by JIT compilation are eliminated.
+* Autoscaling behavior is better (a direct consequence of faster ramp-up).
+* Better cluster CPU utilization (including JITServer) when server side caching is used.
 
 ### Where does AOT fit in?
 
 You may be wondering if the JITServer is compatible with another OpenJ9 feature - the Ahead-Of-Time (AOT) compiler.
 
-The theory behind AOT is that during first-time execution, all the methods are compiled and stored in the AOT shared class cache. Any additional JVMs that connect to the same shared class cache can take advantage of this AOT code.
+The theory behind AOT is that during first-time execution, many Java methods are compiled and stored in the AOT shared class cache. Any additional JVMs that connect to the same shared class cache can take advantage of this AOT code.
 
 With containers, AOT is not as useful. The shared class cache is embedded in the container, so when containers are destroyed, so is the shared class cache. Because of its potential short life-cycle, AOT is not a big advantage in a container environment. Conversely, the JITServer has a long life-cycle and can continue to provide benefits.
 
@@ -125,16 +125,16 @@ But, both features can be used together. In this case the AOT can help an applic
 
 ## 4. JITServer vs vanilla JIT Compiler - how they stack up
 
-These experiments were conducted on Amazon Elastic Compute Cloud (EC2) running on Open Liberty (middleware application server) using micro VMs. They all compare the performance of using the JITServer vs non-JITServer standard OpenJ9 setup.
+These experiments were conducted on Amazon Elastic Compute Cloud (EC2) using micro VMs. They all compare the performance of using the JITServer vs non-JITServer standard OpenJ9 setup. As benchmark we used the [AcmeAir](https://github.com/blueperf/acmeair-monolithic-java) JavaEE application, which runs on top of [Open Liberty](https://openliberty.io/) application server.
 
-First we see how ramp-up time is improved using the JITServer (most compilation occurs during ramp-up). We also see there are no spikes in memory usage (memory consumption is flat and more predictable).
+First we see how ramp-up time is improved using the JITServer (most compilations occur during ramp-up). We also see that there are no spikes in memory usage (memory consumption is flat and more predictable).
 
 ![ramp-up-graph](doc/source/images/ramp-up-graph.png)
 
 >**NOTE**: ramp-up speed is more of an issue for short-lived applications. Behavior at beginning is very important.
 
 Next we see the effects of limiting the number of processors, starting with 2, to 1, to .5.
-As the CPU limit decreases, the behavior of the JITServer solution becomes more pronounced (discrepancy increases between the 2). In other words, the advantage of JITServer increases as you go into more and more CPU constrained environments.
+As the CPU limit decreases, the advantage of the JITServer solution becomes more pronounced (discrepancy increases between the 2). In other words, JITServer is more beneficial as you go into more and more CPU constrained environments.
 
 ![cpu-limits-graph](doc/source/images/cpu-limits-graph.png)
 
@@ -144,31 +144,31 @@ In this last graph we see that the advantage of the JITServer increases as you g
 
 ## 5. How JITServer can lower costs
 
-To minimize cost using Amazon EC2, we will show the cheapest VMs available - the **t3.nano** and the **t3.micro** profiles. Both have 2 CPUs, but with different amounts of memory.
+To minimize cost using Amazon EC2, we will use the cheapest VMs available - the **t3.nano** and the **t3.micro** profiles. Both have 2 CPUs, but with different amounts of memory.
 
 These graphs show how the profiles handle both a standard OpenJ9 setup and one which adds the JITServer.
 
 ![save-money-graph](doc/source/images/save-money-graph.png)
 
-The first graph shows that .5GB is not enough to run just the OpenJ9 JVM. Roughly 200MB is needed by the OS, so only around 300MB is left for the application running in container. As you can see, the performance is poor.
+The first graph shows that .5GB is not enough to run AcmeAir with OpenJ9 JVM. Roughly 200MB is needed by the OS, so only around 300MB is left for the JVM. As you can see, the performance of vanilla OpenJ9 is poor because 300 MB is not sufficient to run the Java application and perform the JIT compilations. OpenJ9 prefers to fail the JIT compilations (thus affecting performance) rather than risking a native OOM event. In contrast, when OpenJ9 offloads compilations to the JITServer the memory pressure drops and throughput increases significantly.
 
-The second graph solves the problem by using a larger VM (the micro VM has double the memory, and double the price). The throughput is now equal, but it winds up costing you twice as much.
+The second graph solves the low throughput problem by using a larger VM (the micro VM has double the memory, and double the price). The throughput is now equal, but it winds up costing you twice as much.
 
-DISCLAIMER - these graphs do not show that additional VM is required to run the JITServer, but that is only temporary. The JITServer can be taken down once the compilations have subsided.
+DISCLAIMER - these graphs do not show that an additional VM is required to run the JITServer, but that is only temporary. The JITServer can be taken down once the compilations have subsided.
 
-In this next example, we show utilizing the JITServer can lower the nodes required to support a set of applications.
+In this next example, we show that utilizing the JITServer can lower the number of nodes required to support a set of applications (see this [blog](https://blog.openj9.org/2021/10/20/save-money-with-jitserver-on-the-cloud-an-aws-experiment/) for more details).
 
 This example consists of the following:
 
-* Running on ROSA (RedHat OpenShift Service on AWS).
+* Running on RedHat OpenShift Service on AWS (ROSA).
 * The OpenShift Container Platform (OCP) consists of 3 master nodes, 2 infra nodes, and 3 worker nodes.
-  * The Worker nodes have 8 vCPUs and 16 GB RAM (only ~12.3 GB available).
+  * The Worker nodes have 8 vCPUs and 16 GB RAM (only ~12.3 GB available to applications).
 * Nodes will host 4 different applications:
   * AcmeAir Microservices
   * AcmeAir Monolithic
   * Pet Clinic (Springboot framework)
   * Quarkus
-* A low amount of load was added to simulate real-world environments.
+* A low amount of load was used to simulate real-world environments.
 
 ![density-graph](doc/source/images/density-graph.png)
 
@@ -218,4 +218,4 @@ The OpenJ9 JVM is open-source and free to download. Due to licensing issues, the
 
 ### Any competing technologies?
 
-Currently, no other leading JVM vendors offer the JITServer provided by OpenJ9. But Azul does have a competing product that provides similar functionality - the product name is [Cloud Native Compiler](https://docs.azul.com/cloud_native_compiler/) (CNC). Note that the product is proprietary and requires a non-disclosure license to use.
+Currently, the only other product with a functionality somewhat similar to OpenJ9 JITServer is the [Cloud Native Compiler](https://docs.azul.com/cloud_native_compiler/) (CNC) from Azul. In contrast to OpenJ9 JITserver, CNC is a payed offering, uses proprietary code and requires a non-disclosure license to use.
