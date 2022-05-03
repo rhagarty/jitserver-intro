@@ -8,7 +8,7 @@
 
 As a major contributor to open source projects, IBM moved the development and governance of the `J9` JVM to the Eclipse Foundation, and re-branded the name to `OpenJ9`.
 
-## How does it compete against other JVMs?
+## How does OpenJ9 compare against other JVMs?
 
 Optimized for the cloud and running in constrained environments, `OpenJ9` has the following advantages:
 
@@ -47,9 +47,13 @@ The `OpenJ9 JVM` is available from several locations:
 
 As a part of the transfer of the `AdoptOpenJDK` project to the Eclipse Foundation, it will be re-branded as [Adoptium](https://adoptium.net/). Scheduled for early 2022, `Adoptium` will provide a marketplace for downloading `OpenJDK` binaries and JVMs, including `OpenJ9`. More information about this change can be found [here](https://adoptium.net/docs/faq/), and you can follow along with the release of the marketplace [here](https://github.com/adoptium/adoptium/issues/7).
 
-## What to dig deeper?
+## Want to dig deeper?
 
 Click here to take a deeper dive into the JITServer details.
 
+## How about a demo?
+
 Click here to check out a demo where we show to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
+
+![demo](doc/source/images/demo.png)
 
