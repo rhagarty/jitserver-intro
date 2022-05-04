@@ -16,14 +16,15 @@ In this article we will cover JIT compiler basics, how the JITServer can make a 
 1. [JITServer vs vanilla JIT Compiler - how they stack up](#4-jitserver-vs-vanilla-jit-compiler---how-they-stack-up)
 1. [How JITServer can lower costs](#5-how-jitserver-can-lower-costs)
 1. [Best use cases for implementing JITServer](#6-best-use-cases-for-implementing-jitserver)
-1. [Where to get the JITServer](#7-where-to-get-the-jitserver)
+1. [Competing technologies](#7-competing-technologies)
+1. [Demo](#8-demo)
+1. [Where to get the JITServer](#9-where-to-get-the-jitserver)
 
 ## 1. First came the JIT compiler
 
 JIT compilers were first introduced to run Java code faster, making it more competitive with natively compiled platform-specific languages.
 
 The theory behind the JIT compiler is to convert Java bytecode to machine code as the bytecode is interpreted line by line. Improvement gains are realized when the natively compiled version of that Java code is executed again.
-
 
 The JIT compiler is a part of the Java Virtual Machine (JVM). Shown below is the workflow from Java code to execution on the host machine:
 
@@ -166,7 +167,7 @@ This example consists of the following:
 * Nodes will host 4 different applications:
   * AcmeAir Microservices
   * AcmeAir Monolithic
-  * Pet Clinic (Springboot framework)
+  * Pet Clinic (Spring Boot framework)
   * Quarkus
 * A low amount of load was used to simulate real-world environments.
 
@@ -210,12 +211,22 @@ How the JITServer should be implemented:
 * Use vCPU “limits” much larger than “requests” to allow for CPU usage spikes.
 * Better performance if the compilation phases from different JVM clients do not overlap (stagger).
 
-## 7. Where to get the JITServer
+## 7. Competing technologies
+
+Currently, the only other product with a functionality somewhat similar to OpenJ9 JITServer is the [Cloud Native Compiler](https://docs.azul.com/cloud_native_compiler/) (CNC) from Azul. In contrast to OpenJ9 JITserver, CNC is a payed offering, uses proprietary code and requires a non-disclosure license to use.
+
+## 8. Demo
+
+Click here to check out a demo where we show to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
+
+![demo](doc/source/images/demo.png)
+
+## 9. Where to get the JITServer
 
 As mentioned previously, the JITServer comes with the standard [Eclipse OpenJ9 JVM](https://www.eclipse.org/openj9/). In fact, the JITServer is actually just another instance of the OpenJ9 JVM, but with a different persona.
 
-The OpenJ9 JVM is open-source and free to download. Due to licensing issues, the only vendor that currently provides install packages and support is IBM, via the [Semeru Runtimes](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
+The OpenJ9 JVM is open-source and free to download. Due to licensing issues, the only vendor that currently provides install packages and support is IBM, via the Semeru Runtimes.
 
-### Any competing technologies?
+[IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is IBM's supported open source version of the Java SDK, and fully implements the Oracle Java Standard Edition (SE) APIs.
 
-Currently, the only other product with a functionality somewhat similar to OpenJ9 JITServer is the [Cloud Native Compiler](https://docs.azul.com/cloud_native_compiler/) (CNC) from Azul. In contrast to OpenJ9 JITserver, CNC is a payed offering, uses proprietary code and requires a non-disclosure license to use.
+For downloads, visit the [IBM Developer site](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
