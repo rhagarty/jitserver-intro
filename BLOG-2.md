@@ -2,9 +2,9 @@
 
 ## What is IBM Semeru Runtimes?
 
-[IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is IBM's supported open source version of the Java SDK, and fully implements the Oracle Java Standard Edition (SE) APIs.
+[IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is IBM's supported open source version of the Java SDK, and fully implements the Java Standard Edition (SE) APIs.
 
-Similar to other vendors offerings, Semeru Runtimes is built on the latest open source release of the [OpenJDK class libraries](https://openjdk.java.net/).
+Similar to other vendor offerings and builds of OpenJDK, Semeru Runtimes is built on the latest open source release of the [OpenJDK class libraries](https://openjdk.java.net/).
 
 What separates Semeru Runtimes from the others is that it includes the highly rated OpenJ9 JVM.
 
@@ -16,7 +16,7 @@ Another differentiator is the supported platforms. Besides the standard x86 and 
 
 OpenJ9 began life some 15 years ago as simply J9. Developed by IBM, J9 has been used by all IBM Java based customers for all types of workloads - from medical, to banking and research.
 
-As a major contributor to open source projects, IBM moved the development and governance of the J9 JVM to the Eclipse Foundation, and re-branded the name to OpenJ9.
+As a major contributor to open source projects and for an open Java ecosystem, IBM moved the development and governance of the J9 JVM to the Eclipse Foundation, and it was renamed Eclipse OpenJ9.
 
 ## How does OpenJ9 compare against other JVMs?
 
@@ -48,13 +48,13 @@ Starting in May 2022, Eclipse Adoptium has added a marketplace site where vendor
 
 In a word, Yes!
 
-IBM Semeru Runtime Certified Edition will be included, and will be the only offering that includes the OpenJ9 JVM, as well as support for IBM platforms such as Z and POWER.
+IBM Semeru Runtime Certified Edition will be included, and will be the only offering that includes the Eclipse OpenJ9 JVM, as well as support for platforms such as IBM Z and POWER.
 
 >**NOTE**: IBM Semeru Runtime Certified Edition has an IBM license and is a Java Platform, Standard Edition compatible implementation.
 
 ## Summary
 
-If you want access to the latest release of IBM Semeru Runtimes, the preferred site is still [IBM Developer](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
+If you want access to the latest release of IBM Semeru Runtimes, [IBM Developer](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/) is still a primary site for downloads.
 
 As of May 2022, the [Eclipse Adoptium Marketplace](TBD) will provide a convenient alternative download site for the Certified Edition.
 
