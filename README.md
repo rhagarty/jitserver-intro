@@ -217,7 +217,7 @@ Currently, the only other product with a functionality somewhat similar to OpenJ
 
 ## 8. Demo
 
-Click here to check out a demo where we show to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
+Click here to check out a demo where we show how to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
 
 ![demo](doc/source/images/demo.png)
 
