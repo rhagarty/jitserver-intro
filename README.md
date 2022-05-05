@@ -32,12 +32,12 @@ The JIT compiler is a part of the Java Virtual Machine (JVM). Shown below is the
 
 Compile Time - converting Java code to bytecode:
 
-* **_javac abc.java_** - invokes the java compiler that converts the java code into byte code.
-* The byte code is stored in a  class file - **_abc.class_**
+* **_javac abc.java_** - invokes the java compiler that converts the java code into bytecode.
+* The bytecode is stored in a  class file - **_abc.class_**
 
 Run Time - execute the bytecode on the host machine:
 
-* **_java abc_** - loads the class file byte code into the class loader of the JVM.
+* **_java abc_** - loads the class file bytecode into the class loader of the JVM.
 * The bytecode verifier ensures the security of the bytecode.
 * One line at a time, the interpreter converts the bytecode into machine code and executes it.
 * The JIT compiler can improve execution performance by 10x over the interpreter. Based on profiling metrics, the JIT compiler will supply machine code of recurring bytecodes to the interpreter for execution.
