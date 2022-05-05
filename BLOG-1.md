@@ -10,11 +10,11 @@ As a major contributor to open source projects, IBM moved the development and go
 
 ## How does OpenJ9 compare against other JVMs?
 
-Optimized for the cloud and running in constrained environments, `OpenJ9` has the following advantages:
+Optimized for the cloud and constrained environments, `OpenJ9` has the following advantages:
 
 * Uses dramatically less memory without sacrificing application responsiveness.
-* Provides AOT (Ahead of Time compilation) capabilities using shared cache between instances.
-* Provides a remote JIT compiler (JITServer) to offload CPU cycles and memory spikes from the application instance.
+* Provides AOT (Ahead of Time compilation) capabilities using a shared cache between instances.
+* Provides an out-of-process JIT compiler (JITServer) to offload compilations to a remote server and eliminate CPU and memory spikes from the application instance.
 
 ![openj9-vs-hotspot](doc/source/images/openj9-vs-hotspot.png)
 
@@ -22,30 +22,27 @@ And, as with other open source JVMs, it is free of charge. Pay-for-support optio
 
 ## What is a JITServer?
 
-The JITServer is a unique feature offered by the OpenJ9 JVM, and provides a big performance increase, especially when dealing with constrained environments such as containers.
+The JITServer is a unique feature offered by the OpenJ9 JVM, and provides a big performance increase, especially when dealing with constrained environments such as micro-containers.
 
-Instead of a typical container running a JVM with an internal JIT compiler, the JITServer is run remotely (on cloud or in its own container), where is can process compile requests from multiple JVMs. This provides the following advantages:
+Instead of a typical container running a JVM with an internal JIT compiler, the JITServer is run remotely (on cloud or in its own container), providing JIT compilation services for multiple client JVMs. This approach has the following advantages:
 
-* JIT compilation resources can be scaled independently.
+* JIT compilation resources can be scaled independently from the Java application resources.
 * Application containers can use smaller memory limits to minimize costs.
-* Overall cluster memory savings (JITServer included) due to less memory consumption peaks coming from different applications.
-* Provisioning is simpler - user only needs to care about application requirements.
+* Overall cluster memory utilization (JITServer included) is reduced, because memory consumption peaks from different applications don’t align.
+* Provisioning is simpler - user only needs to care about the Java application requirements.
 * Ramp-up is faster, especially in constrained environments.
-* Performance of short-lived applications is better - no need to re-compile methods on re-start.
-* Performance is more predictable - less memory spikes in the JVM.
-* Autoscaling behavior is better. (NEED MORE)
-* JITServer ramp-up advantage increases in CPU constrained environments.
+* Performance of short-lived applications is better.
+* Performance is more predictable - less CPU spikes in the JVM.
+* Autoscaling behavior is better (a direct consequence of faster ramp-up).
 
 ## How do I get it?
 
-As mentioned previously, the `OpenJ9 JVM` is open source and managed by the the [Eclipse Foundation](https://www.eclipse.org/openj9/). The `JITServer` technology is included with the `OpenJ9 JVM` - in reality, the `JITServer` is just another persona instance of the `OpenJ9 JVM`.
+As mentioned previously, the `OpenJ9 JVM` is open source and managed by the [Eclipse Foundation](https://www.eclipse.org/openj9/). The `JITServer` technology is included with the `OpenJ9 JVM` - in reality, the `JITServer` is just another persona instance of the `OpenJ9 JVM`.
 
-The `OpenJ9 JVM` is available from several locations:
+Pre-built `OpenJ9 JVM` binaries are available for free from IBM, as part of the [IBM Semeru Runtimes](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/). Note that the [AdoptOpenJDK](https://adoptopenjdk.net/) project, the former home for OpenJ9 binaries, has been deprecated and the link provided when selecting the `OpenJ9 JVM` will direct the user to the `IBM Semeru` download page.
 
-* From IBM, as part of the [IBM Semeru Runtimes](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
-* From [AdoptOpenJDK](https://adoptopenjdk.net/). Note that the AdoptOpenJDK project has moved to the Eclipse Foundation and will be deprecated over time. In the meantime, the link provided when selecting the `OpenJ9 JVM` will direct the user to the `IBM Semeru` download page.
+Containers with OpenJ9 JVM can be pulled from [dockerhub](https://hub.docker.com/_/ibm-semeru-runtimes) or from [RedHat catalog](https://catalog.redhat.com/software/containers/search?q=semeru&p=1).
 
-As a part of the transfer of the `AdoptOpenJDK` project to the Eclipse Foundation, it will be re-branded as [Adoptium](https://adoptium.net/). Scheduled for early 2022, `Adoptium` will provide a marketplace for downloading `OpenJDK` binaries and JVMs, including `OpenJ9`. More information about this change can be found [here](https://adoptium.net/docs/faq/), and you can follow along with the release of the marketplace [here](https://github.com/adoptium/adoptium/issues/7).
 
 ## Want to dig deeper?
 
@@ -53,7 +50,7 @@ Click here to take a deeper dive into the JITServer details.
 
 ## How about a demo?
 
-Click here to check out a demo where we show to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
+Click here to check out a demo where we show how to configure and run multiple containers with a JITServer. We will also use Grafana to graph CPU and memory metrics showing how the JITServer can better utilize and minimize system resources.
 
 ![demo](doc/source/images/demo.png)
 
