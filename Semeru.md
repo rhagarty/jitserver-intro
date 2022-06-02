@@ -32,7 +32,7 @@ Optimized for the cloud and running in constrained environments, OpenJ9 has the 
 
 ## How do I get it?
 
-IBM Semeru Runtimes is available at no cost, even for production use. The central download repository can be found on the [IBM Developer site](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
+IBM Semeru Runtimes can be freely downloaded, even for production use. The central download repository can be found on the [IBM Developer site](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
 
 Here you will find options for both Certified and Open Editions.
 
