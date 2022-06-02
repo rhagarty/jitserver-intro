@@ -4,7 +4,7 @@
 
 <img align="right" src="doc/source/images/semeru-icon.png" width="175px"/>
 
-[IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is t IBM's supported open source version of the Java SDK, and fully implements the Java Standard Edition (SE) APIs. It is available at no cost to developers, even for production use.
+[IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is IBM's supported open source version of the Java SDK, and fully implements the Java Standard Edition (SE) APIs. It is available at no cost to developers, even for production use.
 
 Similar to other vendor offerings and builds of OpenJDK, Semeru Runtimes is built on the latest open source release of the [OpenJDK class libraries](https://openjdk.java.net/).
 
