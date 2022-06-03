@@ -6,7 +6,7 @@
 
 [IBM Semeru Runtimes](https://www.ibm.com/support/pages/semeru-runtimes-getting-started/) is IBM's supported open source version of the Java SDK, and fully implements the Java Standard Edition (SE) APIs. It is available at no cost to developers, even for production use.
 
-Similar to other vendor offerings and builds of OpenJDK, Semeru Runtimes is built on the latest open source release of the [OpenJDK class libraries](https://openjdk.java.net/).
+Similar to other vendor offerings and builds of OpenJDK, Semeru Runtimes is built on the latest open source release of the [OpenJDK](https://openjdk.java.net/) class libraries.
 
 What separates Semeru Runtimes from the others is that it includes the highly rated Eclipse OpenJ9 JVM.
 
@@ -34,7 +34,7 @@ Optimized for the cloud and running in constrained environments, OpenJ9 has the 
 
 IBM Semeru Runtimes can be freely downloaded, even for production use. The central download repository can be found on the [IBM Developer site](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/).
 
-Here you will find options for both Certified and Open Editions.
+Here you will find options for both Open and Certified Editions.
 
 **Open Edition**:
 
@@ -54,13 +54,13 @@ Additionally, the Certified Edition is available from the [Eclipse Adoptium Mark
 
 ## What is the Eclipse Adoptium Marketplace?
 
-Eclipse Adoptium is the primary site for downloading TCK certified runtimes for the Java ecosystem.
+The Eclipse Adoptium Working Group promotes and supports high-quality, TCK certified runtimes and associated technology for use across the Java ecosystem.
 
 >**NOTE**: TCK stands for Technology Compatibility Kit - a suite of tests to ensure compliance with the latest Java specification.
 
-Starting in May 2022, Eclipse Adoptium has added a marketplace site where vendors can provide downloads to their JDK builds.
+Starting in May 2022, the Eclipse Adoptium Working Group launched a marketplace site where vendors can provide downloads to their JDK builds.
 
-IBM Semeru Runtime Certified Edition will be included, and will be the only offering that includes the Eclipse OpenJ9 JVM, as well as support for platforms such as IBM Z and POWER.
+IBM Semeru Runtime Certified Edition is included, and will be the only offering that includes the Eclipse OpenJ9 JVM, as well as support for platforms such as IBM Z and POWER.
 
 ![adoptium-marketplace](doc/source/images/adoptium-marketplace.png)
 
@@ -68,7 +68,7 @@ IBM Semeru Runtime Certified Edition will be included, and will be the only offe
 
 If you want access to the latest release of IBM Semeru Runtimes, [IBM Developer](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/) is still a primary site for downloads.
 
-As of May 2022, the [Eclipse Adoptium Marketplace](https://adoptium.net/marketplace) will provide a convenient alternative download site for the Certified Edition.
+As of May 2022, the [Eclipse Adoptium Marketplace](https://adoptium.net/marketplace) provides a convenient alternative download site for the Certified Edition.
 
 ## Related articles
 
