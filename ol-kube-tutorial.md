@@ -100,7 +100,7 @@ Completing this tutorial should take about 30 minutes.
 1. [Deploy the **getting-started** application image](#3-deploy-the-getting-started-application-image)
 1. [Clean up](#4-clean-up)
 
-## Step 1. Deploying the JITServer service
+## 1. Deploying the JITServer service
 
 As explained in a [recent tutorial](https://developer.ibm.com/tutorials/using-openj9-jitserver-in-kubernetes/), the JITServer service can be deployed either using yaml files or the Helm chart available in the [openj9-utils](https://github.com/eclipse-openj9/openj9-utils/tree/master/helm-chart/openj9-jitserver-chart) git repository. In this tutorial we will use the second approach and we will loosely follow the steps outlined in this [OpenJ9 blog post](https://blog.openj9.org/2021/03/20/introducing-the-eclipse-openj9-jitserver-helm-chart/).
 
@@ -133,7 +133,7 @@ $ kubectl logs myjitserver-openj9-jitserver-chart-86c8d54d64-mthps
 JITServer is ready to accept incoming requests
 ```
 
-## Step 2. Install the Open Liberty Operator
+## 2. Install the Open Liberty Operator
 
 ### A. Install Custom Resource Definitions (CRDs) for OpenLibertyApplication
 
@@ -183,7 +183,7 @@ openlibertydumps          oldump,oldumps     apps.openliberty.io   true         
 openlibertytraces         oltrace,oltraces   apps.openliberty.io   true         OpenLibertyTrace
 ```
 
-## Step 3. Deploy the getting-started application image
+## 3. Deploy the getting-started application image
 
 Create the following YML file which specifies using the "getting-started" application image from Open Liberty. Name the file "liberty.yaml".
 
@@ -223,7 +223,7 @@ $ kubectl logs my-liberty-app-bb96dbd78-tq68r | grep JITServer
 #JITServer: t=    10 Connected to a server (serverUID=11873153734538590431)
 ```
 
-## Step 4. Clean up
+## 4. Clean up
 
 Uninstall the getting-started application by using the kubectl delete command on the liberty.yaml file from Step 3:
 
