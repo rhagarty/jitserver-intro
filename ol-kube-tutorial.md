@@ -1,6 +1,6 @@
 ---
-# Related publishing issue: https://github.ibm.com/IBMCode/IBMCodeContent/issues/7108 
-# https://w3.ibm.com/developer/contentcreatortool/cct/developer/master/Tutorials/ 
+# Related publishing issue: https://github.ibm.com/IBMCode/IBMCodeContent/issues/7108
+# https://w3.ibm.com/developer/contentcreatortool/cct/developer/master/Tutorials/
 draft: true
 # ignore_prod: 		#Required=false (true|false) - If true, the changes to the content do not show on the live site. If false, the changes are published to the live site.
 # display_in_listing: 		#Required=false (true|false) - If set to true (the default value), nothing happens. If set to false, the page will exist but it won't be displayed in hubs, archives, or search. Set this to false when you use the page_links_to metadata.
@@ -31,17 +31,17 @@ meta_keywords: "OpenJ9, JITServer, Kubernetes, pirvu"
 
 primary_tag: "java"
 
-tags: 
+tags:
   - "semeru-runtimes"
 
 components:
   - "kubernetes"
   - "open-j9"
 
-# services: 		#Required=false - Select the 1 or more services that are specifically in use by the content. Less is more. (Services can only be the slugs from the https://github.ibm.com/IBMCode/Definitions/blob/master/services.yml file.) 
+# services: 		#Required=false - Select the 1 or more services that are specifically in use by the content. Less is more. (Services can only be the slugs from the https://github.ibm.com/IBMCode/Definitions/blob/master/services.yml file.)
 # runtimes: 		#Required=false - Select the 1 or more runtimes that are specifically in use by the content. Less is more. (Runtimes can only be the slugs from the https://github.ibm.com/IBMCode/Definitions/blob/master/runtimes.yml file.)
 
-related_content: 
+related_content:
   - type: articles
     slug: garbage-collection-tradeoffs-and-tuning-with-openj9
   - type: articles
@@ -79,9 +79,8 @@ In this tutorial we will show you how easy it is to connect an Open Liberty appl
 * [Ubuntu](https://ubuntu.com/) -- Linux OS distribution
 * [MicroK8s](https://microk8s.io/) -- Lightweight Kubernetes
 * [KVM](https://www.linux-kvm.org/page/Main_Page) -- Kernel Virtual Machine on Linux
-* [Podman](https://podman.io/) -- Container engine
 
-For simplicity, the experiments will be performed in a [MicroK8s](https://microk8s.io/) single-node K8s cluster that runs in a KVM virtual machine with Ubuntu 22.04. How to install/configure the VM and MicroK8s is outside the scope of this tutorial. For MicroK8s, the following add-ons were enabled: dns, registry, storage, rbac, ingress, and Prometheus. In Ubuntu, we also installed podman-docker to build the various container images. Note that in MicroK8s all `kubectl` commands need to be prefixed by `microk8s` commands. To simplify development, we have created an alias:
+For simplicity, the experiments will be performed in a [MicroK8s](https://microk8s.io/) single-node K8s cluster that runs in a KVM virtual machine with Ubuntu 22.04. How to install/configure the VM and MicroK8s is outside the scope of this tutorial. For MicroK8s, the following add-ons were enabled: dns, registry, storage, rbac, ingress, and Prometheus. Note that in MicroK8s all `kubectl` commands need to be prefixed by `microk8s` commands. To simplify development, we have created an alias:
 
 ```bash
 $ alias kubectl='microk8s kubectl'
@@ -151,7 +150,7 @@ The Open Liberty Operator can be installed to:
 1. Watch another namespace
 1. Watch all namespaces in the cluster
 
-Appropriate roles and bindings are required to watch another namespace or watch all namespaces (see the documentation). For simplicity, in this tutorial, the Open Liberty Operator will watch its own namespace, default.
+Appropriate roles and bindings are required to watch another namespace or watch all namespaces (see the documentation). For simplicity, in this tutorial, the Open Liberty Operator will watch its own namespace, **default**.
 
 Set the environment variables for the Operator by running the following commands:
 
@@ -199,7 +198,7 @@ spec:
     value: "-XX:+UseJITServer -XX:JITServerAddress=myjitserver-openj9-jitserver-chart -XX:+JITServerLogConnections"
 ```
 
-Then deploy the getting-started app with the command:
+Then, deploy the "getting-started" app with the command:
 
 ```bash
 $ kubectl apply -f liberty.yaml
@@ -210,8 +209,9 @@ Note the extra options passed to the OpenJ9 JVM through the JVM_ARGS environment
 ```bash
 $ kubectl get services | grep myjitserver
 myjitserver-openj9-jitserver-chart   ClusterIP   10.152.183.217   <none>        38400/TCP   10m
--XX:+JITServerLogConnections tells the client OpenJ9 JVM to print a line whenever it connects to a JITServer instance.
 ```
+**-XX:+JITServerLogConnections** tells the client OpenJ9 JVM to print a line whenever it connects to a JITServer instance.
+
 
 Verify that the application started and that it offloads JIT compilations to JITServer by looking at the logs of the application:
 
@@ -225,13 +225,13 @@ $ kubectl logs my-liberty-app-bb96dbd78-tq68r | grep JITServer
 
 ## 4. Clean up
 
-Uninstall the getting-started application by using the kubectl delete command on the liberty.yaml file from Step 3:
+Uninstall the "getting-started" application by using the kubectl delete command on the liberty.yaml file from Step 3:
 
 ```bash
 $ kubectl delete -f liberty.yaml
 ```
 
-Uninstall the Open Liberty Operator and the corresponding CRDs by running commands from Step 2.C and 2.A after replacing kubectl apply with kubectl delete:
+Uninstall the Open Liberty Operator and the corresponding CRDs by running commands from Step 2.C and 2.A after replacing `kubectl apply` with `kubectl delete`:
 
 ```bash
 $ curl -L https://raw.githubusercontent.com/OpenLiberty/open-liberty-operator/main/deploy/releases/0.8.2/kubectl/openliberty-app-operator.yaml \
@@ -250,4 +250,4 @@ $ microk8s helm3 delete myjitserver
 
 In this tutorial we showed how to connect an Open Liberty application deployed with the Open Liberty Operator to a JITServer service deployed with a Helm chart.
 
-In order to ensure compatibility between the JVM running the Liberty app and JITServer, we took a shortcut and picked the JITServer container image to be identical to the Liberty app container image. This approach does not increase the runtime footprint or CPU consumption of JITServer, because it is going to use only the JDK from the Liberty app image. Moreover, there is no increase in terms of disk space because the same container image is reused for two different purposes. However, this technique forces you to have a separate JITServer deployment for each Liberty app. If your goal is to maximize container density in the cloud (including JITServer instances), then it may be better to use a separate JITServer image based on OpenJ9 (as shown in this tutorial) and connect multiple Open Liberty applications to it.
+In order to ensure compatibility between the JVM running the Liberty app and JITServer, we took a shortcut and picked the JITServer container image to be identical to the Liberty app container image. This approach does not increase the runtime footprint or CPU consumption of JITServer, because it is going to use only the JDK from the Liberty app image. Moreover, there is no increase in terms of disk space because the same container image is reused for two different purposes. However, this technique forces you to have a separate JITServer deployment for each Liberty app. If your goal is to maximize container density in the cloud (including JITServer instances), then it may be better to use a separate JITServer image based on OpenJ9 (as shown in [this tutorial](https://developer.ibm.com/tutorials/using-openj9-jitserver-in-kubernetes/)) and connect multiple Open Liberty applications to it.
