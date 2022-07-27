@@ -74,8 +74,6 @@ The [Open Liberty Operator](https://openliberty.io/docs/latest/open-liberty-oper
 
 In this tutorial we will show you how easy it is to connect an Open Liberty application deployed with the Open Liberty Operator, to a JITServer service deployed with a Helm chart.
 
-For simplicity, the experiments will be performed in a [MicroK8s](https://microk8s.io/) single-node K8s cluster that runs in a KVM virtual machine with Ubuntu 22.04. As application we will use the [getting-started app](https://github.com/OpenLiberty/sample-getting-started) for which a container image can be pulled from **icr.io/appcafe/open-liberty/samples/getting-started**.
-
 ## Prerequisites
 
 * [Ubuntu](https://ubuntu.com/) -- Linux OS distribution
@@ -83,11 +81,13 @@ For simplicity, the experiments will be performed in a [MicroK8s](https://microk
 * [KVM](https://www.linux-kvm.org/page/Main_Page) -- Kernel Virtual Machine on Linux
 * [Podman](https://podman.io/) -- Container engine
 
-In these experiments, we installed MicroK8s 1.23 on a KVM with eight vCPUs and 16GB of RAM running on Ubuntu 22.04. How to install/configure the VM and MicroK8s is outside the scope of this tutorial. For MicroK8s, the following add-ons were enabled: dns, registry, storage, rbac, ingress, and Prometheus. In Ubuntu, we also installed podman-docker to build the various container images. Note that in MicroK8s all `kubectl` commands need to be prefixed by `microk8s` commands. To simplify development, we have created an alias:
+For simplicity, the experiments will be performed in a [MicroK8s](https://microk8s.io/) single-node K8s cluster that runs in a KVM virtual machine with Ubuntu 22.04. How to install/configure the VM and MicroK8s is outside the scope of this tutorial. For MicroK8s, the following add-ons were enabled: dns, registry, storage, rbac, ingress, and Prometheus. In Ubuntu, we also installed podman-docker to build the various container images. Note that in MicroK8s all `kubectl` commands need to be prefixed by `microk8s` commands. To simplify development, we have created an alias:
 
 ```bash
 $ alias kubectl='microk8s kubectl'
 ```
+
+For the application, we will use the Open Liberty [getting-started app](https://github.com/OpenLiberty/sample-getting-started). The container image can be pulled from the [IBM Cloud Container Registry](https://www.ibm.com/cloud/container-registry) using the following path: **icr.io/appcafe/open-liberty/samples/getting-started**.
 
 ## Estimated time
 
@@ -185,7 +185,7 @@ openlibertytraces         oltrace,oltraces   apps.openliberty.io   true         
 
 ## 3. Deploy the getting-started application image
 
-Create the following YML file which specifies using the "getting-started" application image from Open Liberty. Name the file "liberty.yaml".
+Create the following YML file which pulls the "getting-started" Open Liberty application image from the IBM Cloud Container Registry. Name the file "liberty.yaml".
 
 ```yaml
 apiVersion: apps.openliberty.io/v1beta2
@@ -202,7 +202,7 @@ spec:
 Then deploy the getting-started app with the command:
 
 ```bash
-kubectl apply -f liberty.yaml
+$ kubectl apply -f liberty.yaml
 ```
 
 Note the extra options passed to the OpenJ9 JVM through the JVM_ARGS environment variable (this is Open Liberty specific). **-XX:+UseJITServer** instructs OpenJ9 to attempt to connect to a JITServer instance whose address is given by the **-XX:JITServerAddress=** option. This is the end-point of our JITServer service and can be found with:
